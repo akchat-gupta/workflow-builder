@@ -1,1 +1,54 @@
-<p>workflow-list works!</p>
+<!-- A container for the entire editor page -->
+<div class="max-w-4xl mx-auto p-8">
+  <!-- Header -->
+  <h1 class="text-3xl font-bold mb-6">Workflow Editor</h1>
+
+  <!-- Workflow Details Form Section -->
+  <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-semibold mb-4">Workflow Details</h2>
+    <div class="space-y-4">
+      <div>
+        <label
+          for="workflowName"
+          class="block text-sm font-medium text-gray-700"
+          >Workflow Name</label
+        >
+        <input
+          type="text"
+          id="workflowName"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <div>
+        <label
+          for="workflowDescription"
+          class="block text-sm font-medium text-gray-700"
+          >Description</label
+        >
+        <textarea
+          id="workflowDescription"
+          rows="3"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflow Steps Section -->
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Steps</h2>
+      <button
+        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+      >
+        Add Step
+      </button>
+    </div>
+
+    <!-- This is where the list of steps will go. For now, it's empty. -->
+    <div class="space-y-4">
+      <!-- We will dynamically generate steps here later -->
+      <p class="text-gray-500">No steps yet. Click "Add Step" to begin.</p>
+    </div>
+  </div>
+</div>
