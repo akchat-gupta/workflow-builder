@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { WorkflowManagementRoutingModule } from './workflow-management-routing.module';
-
+import { workflowReducer } from './+state/workflow.reducer';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    WorkflowManagementRoutingModule
-  ]
+    WorkflowManagementRoutingModule,
+    StoreModule.forFeature('workflowEditor', workflowReducer),
+  ],
 })
-export class WorkflowManagementModule { }
+export class WorkflowManagementModule {}
