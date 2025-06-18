@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { provideState } from '@ngrx/store';
+import { workflowEditorFeature } from './features/workflow-management/+state/workflow.reducer';
 
 export const routes: Routes = [
   {
@@ -8,6 +10,7 @@ export const routes: Routes = [
       import('./features/workflow-management/workflow-management.module').then(
         (m) => m.WorkflowManagementModule
       ),
+    providers: [provideState(workflowEditorFeature)],
   },
   {
     path: 'my-tasks',
