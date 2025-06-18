@@ -39,6 +39,7 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold">Steps</h2>
       <button
+        (click)="onAddStep()"
         class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
       >
         Add Step
@@ -47,8 +48,22 @@
 
     <!-- This is where the list of steps will go. For now, it's empty. -->
     <div class="space-y-4">
-      <!-- We will dynamically generate steps here later -->
-      <p class="text-gray-500">No steps yet. Click "Add Step" to begin.</p>
+      <!-- Use the async pipe to subscribe to our steps$ observable -->
+      <ng-container *ngIf="steps$ | async as steps">
+        <!-- Show a message if there are no steps -->
+        <p *ngIf="steps.length === 0" class="text-gray-500">
+          No steps yet. Click "Add Step" to begin.
+        </p>
+
+        <!-- Loop over the steps array and display each one -->
+        <div
+          *ngFor="let step of steps; let i = index"
+          class="border p-4 rounded-md bg-gray-50"
+        >
+          <p class="font-bold">Step {{ i + 1 }}: {{ step.title }}</p>
+          <!-- We will add form fields here in the next milestone -->
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
