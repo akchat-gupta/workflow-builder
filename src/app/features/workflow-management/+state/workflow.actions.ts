@@ -1,11 +1,9 @@
-// src/app/features/workflow-management/+state/workflow.actions.ts
-import { createActionGroup, emptyProps } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 
-// Using createActionGroup is the modern, recommended way to organize actions
 export const WorkflowEditorActions = createActionGroup({
-  source: 'Workflow Editor Page', // A description of where the actions are dispatched from
+  source: 'Workflow Editor Page',
   events: {
-    // Add a new step. For now, it doesn't need a payload.
+    'Update Workflow Details': props<{ name: string; description: string }>(),
     'Add Step': emptyProps(),
   }
 });
