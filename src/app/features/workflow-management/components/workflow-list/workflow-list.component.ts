@@ -47,6 +47,18 @@ export class WorkflowListComponent {
   ngOnInit(): void {
     this.syncStoreToForm();
     this.syncFormToStore();
+
+    this.store
+      .select(selectWorkflowSteps)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((stepsFromStore) => {
+        if (stepsFromStore.length !== this.steps.length) {
+          this.steps.clear();
+          stepsFromStore.forEach((step) => {
+            this.steps.push(this.createStepFormGroup(step));
+          });
+        }
+      });
   }
 
   private syncFormToStore(): void {
@@ -103,14 +115,10 @@ export class WorkflowListComponent {
 
   onAddStep() {
     this.store.dispatch(WorkflowEditorActions.addStep());
-    this.steps.push(
-      this.createStepFormGroup({ id: '', title: 'New Step', description: '' })
-    );
   }
 
   onDeleteStep(index: number): void {
     this.store.dispatch(WorkflowEditorActions.deleteStep({ stepIndex: index }));
-    this.steps.removeAt(index);
   }
 
   ngOnDestroy(): void {
