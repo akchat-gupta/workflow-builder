@@ -1,10 +1,10 @@
-<!-- A container for the entire editor page -->
 <div class="max-w-4xl mx-auto p-8">
-  <!-- Header -->
   <h1 class="text-3xl font-bold mb-6">Workflow Editor</h1>
 
-  <!-- Workflow Details Form Section -->
-  <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+  <form
+    [formGroup]="workflowForm"
+    class="bg-white p-6 rounded-lg shadow-md mb-8"
+  >
     <h2 class="text-xl font-semibold mb-4">Workflow Details</h2>
     <div class="space-y-4">
       <div>
@@ -16,7 +16,8 @@
         <input
           type="text"
           id="workflowName"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          formControlName="name"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
         />
       </div>
       <div>
@@ -28,13 +29,12 @@
         <textarea
           id="workflowDescription"
           rows="3"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          formControlName="description"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
         ></textarea>
       </div>
     </div>
-  </div>
-
-  <!-- Workflow Steps Section -->
+  </form>
   <div class="bg-white p-6 rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold">Steps</h2>
@@ -46,22 +46,17 @@
       </button>
     </div>
 
-    <!-- This is where the list of steps will go. For now, it's empty. -->
     <div class="space-y-4">
-      <!-- Use the async pipe to subscribe to our steps$ observable -->
       <ng-container *ngIf="steps$ | async as steps">
-        <!-- Show a message if there are no steps -->
         <p *ngIf="steps.length === 0" class="text-gray-500">
           No steps yet. Click "Add Step" to begin.
         </p>
 
-        <!-- Loop over the steps array and display each one -->
         <div
           *ngFor="let step of steps; let i = index"
           class="border p-4 rounded-md bg-gray-50"
         >
           <p class="font-bold">Step {{ i + 1 }}: {{ step.title }}</p>
-          <!-- We will add form fields here in the next milestone -->
         </div>
       </ng-container>
     </div>
