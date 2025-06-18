@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { initialWorkflowState } from './workflow.state';
-import { WorkflowEditorActions } from './workflow.actions';
+import { WorkflowApiActions, WorkflowEditorActions } from './workflow.actions';
 export const WORKFLOW_EDITOR_FEATURE_KEY = 'workflowEditor';
 
 export const workflowEditorFeature = createFeature({
@@ -35,7 +35,6 @@ export const workflowEditorFeature = createFeature({
         currentWorkflow: { ...state.currentWorkflow, steps: updatedSteps },
       };
     }),
-
     on(WorkflowEditorActions.deleteStep, (state, { stepIndex }) => {
       const filteredSteps = state.currentWorkflow.steps.filter(
         (_, index) => index !== stepIndex
@@ -59,6 +58,26 @@ export const workflowEditorFeature = createFeature({
           steps: [...state.currentWorkflow.steps, newStep],
         },
       };
-    })
+    }),
+    // When the save process starts
+    on(WorkflowEditorActions.saveWorkflow, (state) => ({
+      ...state,
+      isLoading: true,
+      error: null, // Clear previous errors
+    })),
+
+    // When the API call succeeds
+    on(WorkflowApiActions.saveWorkflowSuccess, (state, { workflow }) => ({
+      ...state,
+      currentWorkflow: workflow, // Update state with the saved workflow (it might have a new ID)
+      isLoading: false,
+    })),
+
+    // When the API call fails
+    on(WorkflowApiActions.saveWorkflowFailure, (state, { error }) => ({
+      ...state,
+      isLoading: false,
+      error,
+    }))
   ),
 });

@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectCurrentWorkflow,
+  selectError,
+  selectIsLoading,
   selectWorkflowSteps,
 } from '../../+state/workflow.selectors';
 import { WorkflowEditorActions } from '../../+state/workflow.actions';
@@ -31,6 +33,8 @@ export class WorkflowListComponent {
   private readonly fb = inject(FormBuilder);
   private readonly store = inject(Store);
   private destroy$ = new Subject<void>();
+  isLoading$ = this.store.select(selectIsLoading);
+  error$ = this.store.select(selectError);
 
   workflowForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -47,18 +51,6 @@ export class WorkflowListComponent {
   ngOnInit(): void {
     this.syncStoreToForm();
     this.syncFormToStore();
-
-    this.store
-      .select(selectWorkflowSteps)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((stepsFromStore) => {
-        if (stepsFromStore.length !== this.steps.length) {
-          this.steps.clear();
-          stepsFromStore.forEach((step) => {
-            this.steps.push(this.createStepFormGroup(step));
-          });
-        }
-      });
   }
 
   private syncFormToStore(): void {
@@ -88,22 +80,26 @@ export class WorkflowListComponent {
   }
 
   private syncStoreToForm(): void {
-    this.store
-      .select(selectCurrentWorkflow)
-      .pipe(take(1))
-      .subscribe((workflow) => {
-        if (workflow) {
-          this.workflowForm.patchValue({
-            name: workflow.name,
-            description: workflow.description,
-          });
+    this.store.select(selectCurrentWorkflow).subscribe((workflow) => {
+      if (!workflow) {
+        return;
+      }
 
-          this.steps.clear();
-          workflow.steps.forEach((step) => {
-            this.steps.push(this.createStepFormGroup(step));
-          });
-        }
-      });
+      this.workflowForm.patchValue(
+        {
+          name: workflow.name,
+          description: workflow.description,
+        },
+        { emitEvent: false }
+      );
+
+      if (workflow.steps.length !== this.steps.length) {
+        this.steps.clear({ emitEvent: false });
+        workflow.steps.forEach((step) => {
+          this.steps.push(this.createStepFormGroup(step), { emitEvent: false });
+        });
+      }
+    });
   }
 
   private createStepFormGroup(step: WorkflowStep): FormGroup {
@@ -119,6 +115,10 @@ export class WorkflowListComponent {
 
   onDeleteStep(index: number): void {
     this.store.dispatch(WorkflowEditorActions.deleteStep({ stepIndex: index }));
+  }
+
+  onSaveWorkflow(): void {
+    this.store.dispatch(WorkflowEditorActions.saveWorkflow());
   }
 
   ngOnDestroy(): void {
